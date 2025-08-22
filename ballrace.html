@@ -53,7 +53,7 @@ button.ghost { background: transparent; }
   font-size: .95rem; color: var(--muted); padding: 6px 10px; border-radius: 10px; border: 1px dashed #243044; background: rgba(18,24,34,.6);
 }
 
-.lane { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; padding: 10px; border-radius: 12px; border: 1px solid #182133; }
+.lane { display: grid; grid-template-columns: 1fr max-content; align-items: center; gap: 8px; padding: 10px; border-radius: 12px; border: 1px solid #182133; }
 .lane h3 { margin: 0; font-size: 1.05rem; }
 .lane small { color: var(--muted); }
 .lane .badge { padding: 3px 8px; border-radius: 999px; font-weight: 700; letter-spacing: .3px; }
@@ -62,7 +62,7 @@ button.ghost { background: transparent; }
 .b { background: rgba(123,166,255,.07); border-color: rgba(123,166,255,.25); }
 .b .badge { background: rgba(123,166,255,.14); color: var(--accentB); border: 1px solid rgba(123,166,255,.35); }
 
-.time { font-size: 1.8rem; font-variant-numeric: tabular-nums; font-weight: 800; }
+.time { font-size: 1.8rem; font-variant-numeric: tabular-nums; font-weight: 800; text-align: right; justify-self: end; min-width: 7ch; }
 .sub { color: var(--muted); font-variant-numeric: tabular-nums; }
 
 .winner { border: 1px solid #244a32; background: linear-gradient(180deg, rgba(71,215,172,.12), rgba(71,215,172,.06)); color: #cffff2; }
