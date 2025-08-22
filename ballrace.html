@@ -152,10 +152,8 @@ input[type="number"] { width: 5.5em; padding: 8px; border-radius: 10px; border: 
     <div class="row" style="justify-content: space-between;">
       <div class="hint">Ereignis-Log</div>
       <div class="row">
-        <button id="btnSimA" class="ghost">Sim A</button>
-        <button id="btnSimB" class="ghost">Sim B</button>
-        <button id="btnClearLog" class="ghost">Log leeren</button>
-      </div>
+        <button id=\"btnClearLog\" class=\"ghost\">Log leeren<\/button>
+      <\/div>
     </div>
     <div class="log" id="log" aria-live="polite"></div>
   </section>
@@ -175,9 +173,7 @@ input[type="number"] { width: 5.5em; padding: 8px; border-radius: 10px; border: 
       idB: document.getElementById('idB'),
       winner: document.getElementById('winner'),
       log: document.getElementById('log'),
-      debounce: document.getElementById('debounce'),
-      btnSimA: document.getElementById('btnSimA'),
-      btnSimB: document.getElementById('btnSimB'),
+      debounce: document.getElementById('debounce')
       btnClearLog: document.getElementById('btnClearLog')
     };
 
@@ -276,10 +272,10 @@ input[type="number"] { width: 5.5em; padding: 8px; border-radius: 10px; border: 
       if (state.phase === 'armed') {
         if (!tag.passes || tag.passes === 0) {
           tag.passes = 1; tag.first = t; beep(80, tag.label==='A'? 700:760); vibrate(20);
-          log(`Start erfasst: Ball ${tag.label} (1. Pass)`);
+          log(`Start captured: Ball ${tag.label} (1st pass)`);
           startTicker();
           if ([...state.tags.values()].filter(x => x.passes >= 1).length === 2) {
-            setPhase('running'); log('Beide Bälle gestartet → Phase "running"', 'ok');
+            setPhase('running'); log('Both balls started → state "running"', 'ok');
           }
         }
         updateTimes();
@@ -328,7 +324,7 @@ input[type="number"] { width: 5.5em; padding: 8px; border-radius: 10px; border: 
           : (tag.passes>=1 && tag.first != null ? fmt(tNow - tag.first) : '–.-- s');
         if (tag.label==='A') ui.timeA.textContent = txt; else ui.timeB.textContent = txt;
       }
-    }
+
 
     function startTicker(){
       if (state.animId) return;
@@ -374,10 +370,6 @@ input[type="number"] { width: 5.5em; padding: 8px; border-radius: 10px; border: 
     ui.btnArm.addEventListener('click', () => { resetRace(); setPhase('armed'); log('Rennen scharf: Warte auf 1. Pass pro Ball…', 'warn'); beep(60, 620); });
 
     ui.btnClearLog.addEventListener('click', () => { ui.log.innerHTML=''; });
-    ui.btnSimA.addEventListener('click', () => simulate('SIM-A'));
-    ui.btnSimB.addEventListener('click', () => simulate('SIM-B'));
-    function simulate(id){ handlePass(id); }
-
     // Support check ------------------------------------------------------
     (function(){
       if ('NDEFReader' in window) {
@@ -390,4 +382,4 @@ input[type="number"] { width: 5.5em; padding: 8px; border-radius: 10px; border: 
     // Start with a clean slate
     resetRace();
   </script></body>
-</html>
+      </html>
