@@ -1,10 +1,10 @@
 <!doctype html>
 
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>NFC Race Timer (2 Bälle)</title>
+  <title>NFC Race Timer (2 Balls)</title>
   <style>
     :root {
       --bg: #0b0f14;
@@ -33,6 +33,7 @@
 
 .card { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border: 1px solid #1b2430; border-radius: 16px; padding: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.35);
   position: relative; overflow: hidden; }
+/* IMPORTANT: don't block clicks */
 .card:before { content: ""; position: absolute; inset: -2px; border-radius: 18px; padding: 1px; background: radial-gradient(600px 300px at 50% -60%, var(--ring), transparent 60%); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
 
 .row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -74,18 +75,13 @@ button.ghost { background: transparent; }
 .err { color: var(--accentErr); }
 .ok { color: var(--accentA); }
 
-.controls { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-.controls > * { width: 100%; }
-
 .kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
 .kpi { text-align: center; padding: 8px; border: 1px solid #1b2430; border-radius: 12px; background: rgba(12,18,26,.6); }
 .kpi .label { font-size: .78rem; color: var(--muted); }
 .kpi .value { font-size: 1.1rem; font-weight: 700; }
 
-.toggle { display:flex; align-items:center; gap:8px; }
 input[type="number"] { width: 5.5em; padding: 8px; border-radius: 10px; border: 1px solid #243044; background: #0f141b; color: var(--text); }
 
-/* Big on small screens */
 @media (max-width: 420px) {
   .time { font-size: 1.6rem; }
   button.big { font-size: 1.05rem; padding: 12px; }
@@ -97,34 +93,34 @@ input[type="number"] { width: 5.5em; padding: 8px; border-radius: 10px; border: 
   <div class="wrap">
     <header>
       <h1>🏁 NFC Race Timer</h1>
-      <div class="pill" id="support">Prüfe Web NFC…</div>
+      <div class="pill" id="support">Checking Web NFC…</div>
     </header><div class="grid">
   <section class="card">
     <div class="row" style="gap:10px; align-items: stretch;">
-      <button id="btnStart" class="primary big">🔄 NFC-Scan starten</button>
-      <button id="btnArm" class="big">🚦 Rennen scharf schalten</button>
-      <button id="btnStop" class="ghost big" disabled>⏹️ Stopp</button>
+      <button id="btnStart" class="primary big">🔄 Start NFC Scan</button>
+      <button id="btnArm" class="big">🚦 Arm race</button>
+      <button id="btnStop" class="ghost big" disabled>⏹️ Stop</button>
     </div>
     <div style="height:10px"></div>
     <div class="row">
-      <div class="status grow" id="status">Status: Bereit</div>
+      <div class="status grow" id="status">Status: Ready</div>
     </div>
     <div class="kpis">
-      <div class="kpi"><div class="label">Phase</div><div class="value" id="phase">idle</div></div>
+      <div class="kpi"><div class="label">State</div><div class="value" id="phase">idle</div></div>
       <div class="kpi"><div class="label">Debounce (ms)</div><div class="value"><input id="debounce" type="number" min="200" max="5000" step="50" value="800"/></div></div>
     </div>
   </section>
 
   <section class="card">
     <div class="hint">
-      <strong>So funktioniert’s:</strong>
+      <strong>How it works:</strong>
       <ol>
-        <li>Tippe <em>„NFC-Scan starten“</em> und erlaube den NFC-Zugriff (nur Chrome/Android, HTTPS).</li>
-        <li>Tippe <em>„Rennen scharf schalten“</em>.</li>
-        <li>Rollen beide Bälle mit ihren NFC-Tags am Handy vorbei. Der <u>erste Vorbeilauf pro Ball</u> ist der Start.</li>
-        <li>Beim <u>zweiten Vorbeilauf</u> desselben Balls wird dessen Rundenzeit gestoppt. Der schnellere gewinnt.</li>
+        <li>Tap <em>“Start NFC Scan”</em> and allow NFC access (Chrome/Android only, HTTPS).</li>
+        <li>Tap <em>“Arm race”</em>.</li>
+        <li>Roll both balls past the phone. The <u>first pass per ball</u> marks the start.</li>
+        <li>On the <u>second pass</u> of the same ball, its lap time stops. The faster one wins.</li>
       </ol>
-      <div class="warn">Tipp: Halte die Tags für eine zuverlässige Erkennung sehr nah (1–3 cm) an die NFC-Antenne des Telefons (meist Rückseite, oben).</div>
+      <div class="warn">Tip: For reliable reads keep tags very close (1–3 cm) to the phone’s NFC antenna (usually upper back).</div>
     </div>
   </section>
 
@@ -145,15 +141,15 @@ input[type="number"] { width: 5.5em; padding: 8px; border-radius: 10px; border: 
       <div class="time" id="timeB">–.-- s</div>
     </div>
     <div style="height:10px"></div>
-    <div id="winner" class="status">Noch kein Sieger.</div>
+    <div id="winner" class="status">No winner yet.</div>
   </section>
 
   <section class="card">
     <div class="row" style="justify-content: space-between;">
-      <div class="hint">Ereignis-Log</div>
+      <div class="hint">Event Log</div>
       <div class="row">
-        <button id=\"btnClearLog\" class=\"ghost\">Log leeren<\/button>
-      <\/div>
+        <button id="btnClearLog" class="ghost">Clear log</button>
+      </div>
     </div>
     <div class="log" id="log" aria-live="polite"></div>
   </section>
@@ -173,7 +169,7 @@ input[type="number"] { width: 5.5em; padding: 8px; border-radius: 10px; border: 
       idB: document.getElementById('idB'),
       winner: document.getElementById('winner'),
       log: document.getElementById('log'),
-      debounce: document.getElementById('debounce')
+      debounce: document.getElementById('debounce'),
       btnClearLog: document.getElementById('btnClearLog')
     };
 
@@ -183,7 +179,7 @@ input[type="number"] { width: 5.5em; padding: 8px; border-radius: 10px; border: 
       ndef: null,
       tags: new Map(), // id -> { label, first: number|undefined, lastTrig: number|0, passes: 0, lap: number|undefined }
       order: [], // id assignment order
-      animId: null,
+      raf: null,
     };
 
     // Utility -------------------------------------------------------------
@@ -216,17 +212,36 @@ input[type="number"] { width: 5.5em; padding: 8px; border-radius: 10px; border: 
 
     function setPhase(p){ state.phase = p; ui.phase.textContent = p; }
     function resetRace(){
-      stopTicker();
       state.tags.clear(); state.order = [];
       ui.timeA.textContent = '–.-- s'; ui.timeB.textContent = '–.-- s';
       ui.idA.textContent = 'ID: –'; ui.idB.textContent = 'ID: –';
-      ui.winner.classList.remove('winner'); ui.winner.textContent = 'Noch kein Sieger.';
+      ui.winner.classList.remove('winner'); ui.winner.textContent = 'No winner yet.';
       setPhase('idle');
+      stopTicker();
+    }
+
+    // Live ticker ---------------------------------------------------------
+    function startTicker(){
+      if (state.raf != null) return;
+      const tick = () => {
+        // Update running times (started but not finished)
+        for (const tag of state.tags.values()){
+          if (tag.passes >= 1 && tag.lap == null && tag.first != null) {
+            const running = nowPerf() - tag.first;
+            const txt = fmt(running);
+            if (tag.label === 'A') ui.timeA.textContent = txt; else ui.timeB.textContent = txt;
+          }
+        }
+        state.raf = requestAnimationFrame(tick);
+      };
+      state.raf = requestAnimationFrame(tick);
+    }
+    function stopTicker(){
+      if (state.raf != null) { cancelAnimationFrame(state.raf); state.raf = null; }
     }
 
     // NFC helpers --------------------------------------------------------
     function getTagId(ev){
-      // Prefer serialNumber when available; fall back to record ids or text payload
       if (ev.serialNumber) return 'SN:' + ev.serialNumber;
       try {
         const parts = [];
@@ -248,13 +263,12 @@ input[type="number"] { width: 5.5em; padding: 8px; border-radius: 10px; border: 
 
     function ensureTag(id){
       if (!state.tags.has(id)){
-        // Assign label A or B (ignore more than 2 unique tags)
         if (state.order.length >= 2) return null;
         const label = state.order.length === 0 ? 'A' : 'B';
         state.order.push(id);
         state.tags.set(id, { label, first: undefined, lastTrig: 0, passes: 0, lap: undefined });
         if (label === 'A') ui.idA.textContent = 'ID: ' + id; else ui.idB.textContent = 'ID: ' + id;
-        log(`Neuer Tag erkannt → Ball ${label} (${id})`, 'ok');
+        log(`New tag detected → Ball ${label} (${id})`, 'ok');
       }
       return state.tags.get(id);
     }
@@ -263,22 +277,19 @@ input[type="number"] { width: 5.5em; padding: 8px; border-radius: 10px; border: 
       const debounceMs = Number(ui.debounce.value || 800);
       const t = nowPerf();
       const tag = ensureTag(id);
-      if (!tag) { log(`Dritter Tag ignoriert (${id})`, 'warn'); return; }
-      if (t - (tag.lastTrig||0) < debounceMs) return; // ignore bounce
+      if (!tag) { log(`Third tag ignored (${id})`, 'warn'); return; }
+      if (t - (tag.lastTrig||0) < debounceMs) return;
       tag.lastTrig = t;
 
-      if (state.phase === 'idle') return; // not armed yet
+      if (state.phase === 'idle') return;
 
       if (state.phase === 'armed') {
-        if (!tag.passes || tag.passes === 0) {
-          tag.passes = 1; tag.first = t; beep(80, tag.label==='A'? 700:760); vibrate(20);
-          log(`Start captured: Ball ${tag.label} (1st pass)`);
-          startTicker();
-          if ([...state.tags.values()].filter(x => x.passes >= 1).length === 2) {
-            setPhase('running'); log('Both balls started → state "running"', 'ok');
-          }
+        tag.passes = 1; tag.first = t; beep(80, tag.label==='A'? 700:760); vibrate(20);
+        log(`Start captured: Ball ${tag.label} (1st pass)`);
+        startTicker();
+        if ([...state.tags.values()].filter(x => x.passes >= 1).length === 2) {
+          setPhase('running'); log('Both balls started → state "running"', 'ok');
         }
-        updateTimes();
         return;
       }
 
@@ -286,63 +297,38 @@ input[type="number"] { width: 5.5em; padding: 8px; border-radius: 10px; border: 
         tag.passes++;
         if (tag.passes === 2 && tag.first != null) {
           tag.lap = t - tag.first; beep(150, 980); vibrate([30, 30, 30]);
-          log(`Rundenzeit Ball ${tag.label}: ${fmt(tag.lap)}`, 'ok');
-          updateTimes();
-          // Winner?
-          const vals = [...state.tags.values()];
-          if (vals.length === 2 && vals.every(x => x.lap != null)) {
-            const [ta, tb] = vals[0].label==='A' ? [vals[0], vals[1]] : [vals[1], vals[0]];
-            declareWinner(ta, tb);
+          log(`Lap time Ball ${tag.label}: ${fmt(tag.lap)}`, 'ok');
+          if ([...state.tags.values()].every(x => x.lap != null)) {
+            declareWinner();
           }
           return;
         }
-        // extra passes beyond second are ignored
         return;
       }
     }
 
-    function declareWinner(ta, tb){
+    function declareWinner(){
       setPhase('finished');
       stopTicker();
+      const vals = [...state.tags.values()];
+      if (vals.length < 2) return;
+      const [ta, tb] = vals[0].label==='A' ? [vals[0], vals[1]] : [vals[1], vals[0]];
+      if (ta.lap == null || tb.lap == null) return;
       if (ta.lap === tb.lap) {
-        ui.winner.textContent = `Unentschieden: ${fmt(ta.lap)} vs ${fmt(tb.lap)}`;
+        ui.winner.textContent = `Tie: ${fmt(ta.lap)} vs ${fmt(tb.lap)}`;
       } else if (ta.lap < tb.lap) {
-        ui.winner.textContent = `🥇 Sieger: Ball A (${fmt(ta.lap)}) · Ball B ${fmt(tb.lap)}`;
+        ui.winner.textContent = `🥇 Winner: Ball A (${fmt(ta.lap)}) · Ball B ${fmt(tb.lap)}`;
       } else {
-        ui.winner.textContent = `🥇 Sieger: Ball B (${fmt(tb.lap)}) · Ball A ${fmt(ta.lap)}`;
+        ui.winner.textContent = `🥇 Winner: Ball B (${fmt(tb.lap)}) · Ball A ${fmt(ta.lap)}`;
       }
       ui.winner.classList.add('winner');
       log(ui.winner.textContent, 'ok');
     }
 
-    function updateTimes(){
-      const entries = [...state.tags.entries()];
-      const tNow = nowPerf();
-      for (const [id, tag] of entries){
-        const txt = (tag.lap != null)
-          ? fmt(tag.lap)
-          : (tag.passes>=1 && tag.first != null ? fmt(tNow - tag.first) : '–.-- s');
-        if (tag.label==='A') ui.timeA.textContent = txt; else ui.timeB.textContent = txt;
-      }
-
-
-    function startTicker(){
-      if (state.animId) return;
-      const loop = () => {
-        state.animId = requestAnimationFrame(loop);
-        updateTimes();
-        const anyRunning = [...state.tags.values()].some(x => x.passes>=1 && x.lap == null);
-        if (state.phase === 'finished' || !anyRunning) { stopTicker(); }
-      };
-      loop();
-    }
-    function stopTicker(){ if (state.animId){ cancelAnimationFrame(state.animId); state.animId = null; } }
-    }
-
     // NFC lifecycle ------------------------------------------------------
     async function startScan(){
       if (!('NDEFReader' in window)){
-        ui.status.innerHTML = 'Status: <span class="err">Web NFC wird nicht unterstützt.</span>'; return;
+        ui.status.innerHTML = 'Status: <span class="err">Web NFC is not supported.</span>'; return;
       }
       try{
         if (state.controller) state.controller.abort();
@@ -350,36 +336,36 @@ input[type="number"] { width: 5.5em; padding: 8px; border-radius: 10px; border: 
         state.ndef = new NDEFReader();
         await state.ndef.scan({ signal: state.controller.signal });
         state.ndef.onreading = (ev) => { const id = getTagId(ev); handlePass(id); };
-        state.ndef.onreadingerror = (ev) => { log('Lesefehler beim NFC-Scan', 'err'); };
-        ui.status.innerHTML = 'Status: <span class="ok">Scan aktiv. Halte Tags nah an die Antenne.</span>';
+        state.ndef.onreadingerror = () => { log('Read error during NFC scan', 'err'); };
+        ui.status.innerHTML = 'Status: <span class="ok">Scan active. Hold tags near the antenna.</span>';
         ui.btnStop.disabled = false;
       } catch (err){
         console.error(err);
-        ui.status.innerHTML = `Status: <span class="err">Fehler beim Starten: ${err?.message||err}</span>`;
+        ui.status.innerHTML = `Status: <span class="err">Error starting: ${err?.message||err}</span>`;
       }
     }
     function stopScan(){
       if (state.controller) { try { state.controller.abort(); } catch(_){} }
       state.controller = null; state.ndef = null;
-      ui.btnStop.disabled = true; ui.status.textContent = 'Status: Scan gestoppt';
+      ui.btnStop.disabled = true; ui.status.textContent = 'Status: Scan stopped';
     }
 
     // UI wiring ----------------------------------------------------------
     ui.btnStart.addEventListener('click', startScan);
     ui.btnStop.addEventListener('click', stopScan);
-    ui.btnArm.addEventListener('click', () => { resetRace(); setPhase('armed'); log('Rennen scharf: Warte auf 1. Pass pro Ball…', 'warn'); beep(60, 620); });
+    ui.btnArm.addEventListener('click', () => { resetRace(); setPhase('armed'); log('Race armed: waiting for 1st pass per ball…', 'warn'); beep(60, 620); });
 
     ui.btnClearLog.addEventListener('click', () => { ui.log.innerHTML=''; });
+
     // Support check ------------------------------------------------------
     (function(){
       if ('NDEFReader' in window) {
-        ui.support.textContent = 'Web NFC verfügbar (Chrome/Android)';
+        ui.support.textContent = 'Web NFC available (Chrome/Android)';
       } else {
-        ui.support.innerHTML = 'Web NFC nicht verfügbar. <span class="warn">Nur Chrome/Android, über HTTPS nutzbar.</span>';
+        ui.support.innerHTML = 'Web NFC not available. <span class="warn">Chrome/Android only, requires HTTPS.</span>';
       }
     })();
 
-    // Start with a clean slate
     resetRace();
   </script></body>
-      </html>
+</html>
